@@ -1,0 +1,91 @@
+\def\COURSENAME{Computability and Complexity}
+\def\COURSECODE{CSCI 387}
+\def\YEAR{F22}
+
+\definecolor{lightgreen}{cmyk}{.25,0,.25,0}
+\definecolor{black}{rgb}{0,0,0}
+\definecolor{dgray}{rgb}{0.1,0.1,0.1}
+\definecolor{lgray}{rgb}{0.5,0.5,0.5}
+\definecolor{dblue}{rgb}{.2,.4,.6}
+\definecolor{lblue}{rgb}{.2,0,.7}
+\definecolor{llblue}{rgb}{.2,0,.6}
+\definecolor{gold}{rgb}{0.8512,0.6042,0.0000}
+\definecolor{lred}{rgb}{1.0000,0.2013,0.1405}
+\definecolor{orange}{rgb}{1,0.3,0}
+\definecolor{dgreen}{rgb}{.01,.6,.06}
+\definecolor{lgreen}{rgb}{0.2610,0.8730,0.2875}
+\definecolor{peachpuff}{rgb}{1.0000,0.7197,0.5181}
+\definecolor{cornflowerblue}{rgb}{0.0859,0.2912,0.8708}
+\definecolor{deepskyblue}{rgb}{0.0000,0.5227,1.0000}
+\definecolor{lightskyblue}{rgb}{0.1946,0.6324,1.0000}
+\definecolor{darkturquoise}{rgb}{0.0000,0.6324,0.6861}
+\definecolor{darkseagreen}{rgb}{0.2264,0.5227,0.2498}
+\definecolor{lemon}{rgb}{0.8512,0.8416,0.5181}
+\definecolor{dred}{rgb}{0.9,0,0}
+\definecolor{dbrown}{rgb}{.6,0,.1}
+
+\setbeamercolor{alerted text}{fg=deepskyblue}
+\setbeamersize{text margin left=5mm,text margin right=5mm}
+
+\mode<presentation>
+{
+\ifnum\print=1
+  \setbeamertemplate{background canvas}
+
+  \usetheme{default}
+  \usecolortheme{rose}
+\else
+  \setbeamertemplate{background canvas}[vertical shading][bottom=white!10,top=blue!15]
+%  \usetheme{Warsaw}
+  \usecolortheme[named=dbrown]{structure}
+  \usetheme{Warsaw}
+\fi
+  \usefonttheme[onlysmall]{structurebold}
+}
+
+
+\mode<article> % only for the article version
+{
+  \usepackage{fullpage}
+  \usepackage{hyperref}
+}
+
+
+\usepackage[all,arc,dvips]{xypic}
+\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
+\usepackage{amsmath,amssymb}
+\usepackage[latin1]{inputenc}
+\usepackage{diagbox}
+%\usepackage{booktabs}
+%\usepackage{colortbl}
+%\usepackage[english]{babel}
+%\usepackage[thai]{babel}
+%\usepackage{times}
+\setbeamercovered{dynamic}
+%\usepackage{pgfpages}
+%\pgfpagelayout{2 on 1}{a4paper,border shrink=5mm}
+%\mode<handout>{\setbeamercolor{background canvas}{bg=black!5}}
+
+%\newcolumntype{h}{>{\columncolor{gray!50}}l}
+
+\newcommand\gcc[1]{\cellcolor{gray!20}{#1}}
+
+\newcommand{\Z}{\mathbf{Z}}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\N}{\mathbf{N}}
+\newcommand{\T}{\mathbf{T}}
+\newcommand{\F}{\mathbf{F}}
+\newcommand{\Q}{\mathbf{Q}}
+\newcommand{\bits}{\{0,1\}}
+\newcommand{\Colon}{\;:\;}
+
+\newcommand{\bheading}[1]{\vspace{10pt} \noindent \textbf{#1}}
+
+\newenvironment{problemstmt}[1]{\begin{rm}
+  \vspace{.3in}
+  \noindent \textbf{Problem #1.}}
+  {\end{rm}
+  \vspace{.3in}
+  \hrule}
+
+

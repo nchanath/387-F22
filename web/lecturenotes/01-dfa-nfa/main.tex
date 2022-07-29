@@ -1,0 +1,868 @@
+\documentclass[xcolor=table]{beamer}
+
+\input{../outmode}
+
+\input{../../params}
+
+\title{Regular Languages}
+\author{Chanathip Namprempre}
+\institute{
+  Computer Science \\
+  Reed College}
+\date{}
+\subject{\COURSENAME}
+
+\begin{document}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%             CONTENTS START HERE
+
+
+\frame{\titlepage}
+
+%% \section<presentation>*{Outline}
+
+%% \begin{frame}
+%%   \frametitle{Outline}
+%%   \tableofcontents[part=1]
+%% \end{frame}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[current,currentsection]
+  \end{frame}
+}
+
+
+\setbeamertemplate{footline}[frame number]
+\setbeamertemplate{navigation symbols}{}
+
+\part<presentation>{Main Talk}
+
+\section[Theme]{What this course is about}
+
+\begin{frame}
+  \frametitle{Computational Theory}
+
+  \begin{itemize}
+    \item limitations of computers
+    \item complexity
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+  In this class, it is helpful to view \alert{\textbf{problems}} as
+  specification of input-output pairs.
+
+  \begin{block}{Problem: Parity of integer}
+  \hspace{14pt}\underline{Input}: an integer
+
+  \hspace{14pt}\underline{Output}: ``yes'' if the integer is odd. ``no'' otherwise.
+  \end{block}
+
+  \bigskip
+  We can certainly write programs to solve this problem.
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Limitations of computers: Decidability}
+
+  \bigskip
+
+  Other problems: PCP, halting problem
+
+  \bigskip
+  We will learn that these two problems are \alert{\textbf{undecidable}}.
+
+  [i.e., whatever programs you write to solve these problems, they will
+  be wrong on some input.]
+
+
+  \bigskip
+  \bigskip
+  To be able to \alert{prove} these claims, we need precise
+  \alert{mathematical models of computation}.
+
+  \medskip
+  In this class, we learn about \alert{automata}, \alert{grammar},
+  and \alert{Turing machines}.
+
+\end{frame}
+
+\begin{frame}
+
+  \frametitle{Complexity}
+
+  Some problems are solvable but takes a long time, e.g. factoring.
+
+  \bigskip
+  We study the \alert{complexity} of these problems, i.e., the
+  inherent hardness of the problems.
+\end{frame}
+
+\begin{frame}
+  \frametitle{This course is useful!}
+
+  \begin{itemize}
+    \item Learn about limitations of computers
+    \item Learn practical models: automata (calculators, doors,
+    coke machines, microwaves, cruise control), grammars (compilers)
+    \item Learn when to stop looking for better solutions to problems
+    \item Learn \alert{abstract thinking} skills
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+
+In theory of computation, we are interested in \textbf{modelling}
+computers, also known as \alert{machines}.
+
+\bigskip
+We first start with the simplest kind of machine,
+\alert{finite automata}.
+
+\bigskip
+Their key feature is that they have a finite number of states. (So
+they are also called ``finite state machines.'')
+\end{frame}
+
+
+\section[Finite Automata]{Finite Automata}
+
+\subsection[example]{Example}
+\begin{frame}
+  \frametitle{Finite Automata}
+
+  \bigskip  
+  Finite automata models computers with very small memory.
+
+  \medskip
+  Examples: digital microwave, automatic doors, digital watches, fans,
+  etc.
+  \medskip
+
+  \fbox{
+    \small{
+      \hspace{-20pt} \begin{tabular}{l|l}
+    \begin{minipage}{1.5in}
+  \[\UseTips
+  \xymatrix {
+    *++[o][F]{\mbox{\alert{closed}}} \ar@(ul,ur)^{\parbox{.8in}{\color{dgreen}{rear} \\ both
+  \\ \color{dgreen}{neither} }} \ar@/^1pc/[r]^{\mbox{\color{dgreen}{front}}}
+    & *++[o][F]{\mbox{\alert{open}}} \ar@/^2pc/[l]^{\mbox{\color{dgreen}{neither}}}
+  \ar@(ul,ur)^{\parbox{.2in}{\color{dgreen}{front} \\ \color{dgreen}{rear} \\ \color{dgreen}{both} }}
+  }
+  \]
+  \end{minipage} &
+    \begin{minipage}{3in}
+      \begin{tabular}{l|llll}
+        \rowcolor{gray!40}
+        \diagbox{\alert{state}}{\color{dgreen}{input}} & \color{dgreen}{neither} & \color{dgreen}{front} & \color{dgreen}{rear} & \color{dgreen}{both} \\
+        \rowcolor{white}
+        \gcc{\alert{closed}} & closed & open & closed & closed \\
+        \gcc{\alert{open}} & closed & open & open & open 
+      \end{tabular}
+    \end{minipage}
+  \end{tabular}}}
+  
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Another example of a finite automaton}
+
+  \begin{block}{Problem: Parity of ones}
+
+  \hspace{14pt}\underline{Input}: a string of zeros and ones
+
+  \hspace{14pt}\underline{Output}: ``yes'' if there are odd number of ones. ``no'' otherwise.
+  \end{block}
+
+  \[\UseTips
+  \xymatrix {
+      *+\txt{\ } \ar[r] & *++[o][F]{q_1} \ar@(ul,ur)^{0}
+  \ar@/^1pc/[r]^{1} & *++[o][F=]{q_2} \ar@(ul,ur)^{0}   \ar@/^1pc/[l]^{1}
+  }
+  \]
+  
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Another example of a finite automaton}
+
+  \begin{tabular}{ll}
+    \begin{minipage}{1.3in}
+  Call this machine $M_1$ 
+  \end{minipage}
+    &
+  \begin{minipage}{3in}
+  \[\UseTips
+  \xymatrix {
+      *+\txt{\ } \ar[r] & *++[o][F]{q_1} \ar@(ul,ur)^{0}
+  \ar@/^1pc/[r]^{1} & *++[o][F=]{q_2} \ar@(ul,ur)^{1}
+  \ar@/^1pc/[r]^{0} & *++[o][F]{q_3} \ar@/^1pc/[l]^{0,1}
+  }
+  \]
+  \end{minipage}
+  \end{tabular}
+
+  This is called a \alert{state diagram} of $M_1$.
+
+  The \alert{states} of $M_1$ are $q_1, q_2, q_3$.
+  
+  The \alert{start state} is $q_1$.
+
+  The \alert{accept state} is $q_2$.
+  
+  The \alert{transitions} are indicated by arrows going from
+  state to state.
+
+  The \alert{outputs} of $M_1$ are either \alert{accept} or \alert{reject}.
+
+\end{frame}
+
+
+\begin{frame}
+
+  \[\UseTips
+  \xymatrix {
+      *+\txt{\ } \ar[r] & *++[o][F]{q_1} \ar@(ul,ur)^{0}
+  \ar@/^1pc/[r]^{1} & *++[o][F=]{q_2} \ar@(ul,ur)^{1}
+  \ar@/^1pc/[r]^{0} & *++[o][F]{q_3} \ar@/^1pc/[l]^{0,1}
+  }
+  \]
+
+  Try using $M_1$ to process the strings 1101, 1, 01, 11, 0101010101,
+  100, 0100, 0101000000, 0, 10, 101000.
+
+  \medskip
+  [Basically, it accepts anything ending with 1 and anything having even
+  number of 0s following the last 1. It rejects other strings.]
+
+\end{frame}
+
+
+\subsection[definition]{Definition}
+
+\begin{frame}
+  \frametitle{Formal definition of a finite automaton}
+
+  \begin{Definition}
+    A \alert{finite
+      automaton} is a 5-tuple $(Q,\Sigma, \delta, q_0, F)$ where
+      \begin{enumerate}
+	\item $Q$ is a finite set called the \alert{states},
+	\item $\Sigma$ is a finite set called the \alert{alphabet},
+	\item $\delta: Q\times \Sigma \rightarrow Q$ is the
+	\alert{transition function},
+	\item $q_0 \in Q$ is the \alert{start state},
+	\item $F \subseteq Q$ is the \alert{set of accept states}.
+      \end{enumerate}
+  \end{Definition}
+
+  \bigskip
+  How would $M_1$ be formally described?
+
+\end{frame}
+
+\begin{frame}
+
+  \[\UseTips
+  \xymatrix {
+      *+\txt{\ } \ar[r] & *++[o][F]{q_1} \ar@(ul,ur)^{0}
+  \ar@/^1pc/[r]^{1} & *++[o][F=]{q_2} \ar@(ul,ur)^{1}
+  \ar@/^1pc/[r]^{0} & *++[o][F]{q_3} \ar@/^1pc/[l]^{0,1}
+  }
+  \]
+
+  The formal description of this machine is $(Q,\Sigma,\delta,q_1,F)$
+  where
+  \begin{enumerate}
+    \item $Q = $ \only<2->{\alert{$\{q_1,q_2,q_3 \}$}}
+    \item $\Sigma = $ \only<3->{\alert{$\{0,1\}$}}
+    \item $\delta$ is this function:
+
+      \only<4->{\alert{
+	\begin{scriptsize}
+	\begin{tabular}{l|ll} 
+	  & 0 & 1 \\\hline
+	  $q_1$ & $q_1$ & $q_2$ \\
+	  $q_2$ & $q_3$ & $q_2$ \\
+	  $q_3$ & $q_2$ & $q_2$
+	\end{tabular}
+	\end{scriptsize}}}
+    \item The start state is \only<5->{\alert{$q_1$}}
+    \item $F = $ \only<6->{\alert{$\{q_2\}$}}
+  \end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{What it means for a DFA to accept strings and to
+  recognize a language}
+
+  \begin{Definition}
+    A DFA \alert{$M$ accepts a string} $w$ if, after executing on $w$
+      as described, it ends up in an accept state.
+  \end{Definition}
+
+  \begin{Definition}
+    A DFA \alert{$M$ recognizes a language} $L$ if
+    \begin{enumerate}
+    \item For every $w\in L$, $M$ accepts $w$
+    \item For every $w\not\in L$, $M$ rejects $w$.
+    \end{enumerate}
+  \end{Definition}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{More terminology}
+
+  Let $M$ be a machine, and let $A$ be the set of all strings that a
+  machine $M$ accepts. All these phrases mean the same thing.
+
+  \begin{enumerate}
+    \item The \alert{language} of machine $M = A$
+    \item $M$ \alert{recognizes} $A$
+    \item $L(M) = A$
+    \item $M$ \alert{accepts} $A$
+  \end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Observations}
+
+  \begin{itemize}
+    \item A machine may accept \underline{many} strings but can recognize only \underline{one}
+      language.
+      \bigskip
+
+    \item A machine accepting \underline{no strings} is considered recognizing \underline{one
+    language}, i.e., the empty language $\emptyset$.
+      \bigskip
+
+    \item If $L$ is a language, and $M$ is a DFA. It \alert{does
+      not make sense} to say these things:
+      \begin{itemize}
+	\item the language $011$
+	\item Run $L$ on input $011$.
+	\item $L$ accepts $100$.
+	\item The language accepted by $M$ is $011$.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\note{
+\begin{scriptsize}
+  $A = \{ w | w \mbox{ contains at least one 1 and an even number of 0s
+    following the last 1 }\}$
+
+  Then, $L(M_1) = A$.
+
+  $M_1$ recognizes $A$.
+\end{scriptsize}}
+
+
+\begin{frame}
+  \frametitle{Formal definition of computation}
+  
+  We know how to \alert{compute} with a finite automaton, i.e., given a
+  string $w$, we know how $M_1$ processes it.  Now we formalizes this
+  process.
+
+  \medskip
+  Let $n\in \Z^+$, $M = (Q, \Sigma, \delta, q_0, F)$ be a finite
+  automaton, and $w = w_1 w_2 \ldots w_n$ be a string over the
+  alphabet $\Sigma$.
+
+  \begin{Definition}
+  \alert{$M$ accepts $w$} if a sequence of states $r_0, r_1, \ldots,
+  r_n$ exists in $Q$ with the following three conditions:
+
+  \begin{enumerate}
+    \item[1.] [$M$ starts in the start state.] $r_0 = q_0$,
+    \item[2.] [$M$ moves according to $\delta$.] $r_{i+1} = \delta(r_i, w_{i+1})$ for $i = 0,\ldots, n-1$,
+    \item[3.] [$M$ ends up in an accept state.] $r_n \in F$.
+  \end{enumerate}
+  \end{Definition}
+
+\end{frame}
+
+\subsection[regular languages]{Regular languages}
+
+\begin{frame}
+  \frametitle{Regular languages}
+
+  \begin{Definition}
+    A language is called a \alert{regular language} if some finite
+    automaton recognizes it.
+  \end{Definition}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Designing finite automata}
+
+  Given some description of the (regular) language, we are interested
+  in constructing a finite automaton that recognizes it.
+  
+  \bigskip
+  \underline{Examples}
+
+  \begin{enumerate}
+  \item The language of all strings with an odd number of
+    1s.
+  \item The language of all strings that contain the string 001 as a
+  substring.
+  \item $\{ w \; | \; w \mbox{ begins with a 1 and ends with a 0 } \}$
+  \item $\{ w \; | \; w \mbox{ contains at least three 1s } \}$
+  \item $\{ \varepsilon, 0 \}$
+  \item $\emptyset$
+  \item all strings except the empty string
+  \end{enumerate}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{More examples of regular languages}
+
+  \begin{tabular}{ll}
+  Alphabet $\Sigma$ &   $\{ 0 \}$\\
+  Definition of $L_1$ &   $\{ 0, 00, 000, 0000, \ldots \}$ \\
+  Sample strings in $L_1$ \ \ \  & $0, 00, 000, \ldots$ \\[1ex] \hline
+  Alphabet $\Sigma$ &   $\{ 0 \}$\\
+  Definition of $L_2$ &   $\{ 0^n$ for $n =1, 2, 3, \ldots \}$ \\
+  Sample strings in $L_2$ & $0, 00, 000, \ldots$ \\[1ex] \hline
+  Alphabet $\Sigma$ &   $\{ 0,1,2,3,4,5,6,7,8,9 \}$ \\
+  Definition of $L_3$ &   $\{$ any finite string of letters that does not \\
+  & start with the letter $0 \}$ \\
+  Sample strings in $L_3$ & $1,2,3,4,5,6,7,8,9,10,11,12,\ldots$
+  \end{tabular}
+  
+\end{frame}
+
+\begin{frame}
+
+  \begin{tabular}{lp{2.5in}}
+  Alphabet $\Sigma$ &   $\{ 0,1,2,3,4,5,6,7,8,9 \}$ \\
+  Definition of $L_4$ &   $\{$ any finite string of letters that, if it
+  starts with the letter $0$, has no more letters after the first $\}$ \\
+  Sample strings in $L_4$ & $0,1,2,3,4,5,6,7,8,9,10,11,12,\ldots$
+  \\[1ex] \hline
+  Alphabet $\Sigma$ &   $\{ a,b,c,d,e,\ldots,z \}$\\
+  Definition of $L_5$ &   $\{$ all the words in the dictionary $\}$ \\
+  Sample strings in $L_5$ \ \ \  & discussion, list, body, trick,
+  $\ldots$ \\[1ex] \hline
+  Alphabet $\Sigma$ &   $\{ a,b,c,d,e,\ldots,z, ., ! \}$\\
+  Definition of $L_6$ &   $\{$ grammatical sequence of words in the dictionary $\}$ \\
+  Sample strings in $L_6$ \ \ \  & The house is burning., Help me!, $\ldots$ 
+  \end{tabular}
+\end{frame}
+
+
+
+\subsection[regular operations]{Regular operations}
+
+\begin{frame}
+  \frametitle{The regular operations}
+
+  \begin{Definition}
+    Let $A$ and $B$ be
+      languages. We define the regular operations {union},
+      {concatenation}, and {star} as follows:
+      \begin{itemize}
+	\item \alert{Union}: $A\cup B = \{ x \; | \; x \in A \mbox{ or } x \in B \}$
+	\item \alert{Concatenation}: $A \circ B = \{ xy \; | \; x \in A \mbox{ and } y \in B \}$
+	\item \alert{Star}: $A^* =\{ x_1 x_2\ldots x_k \; | \; k \geq 0 \mbox{ and each } x_i \in A \}$
+      \end{itemize}
+  \end{Definition}
+  
+  \begin{tabular}{lp{3in}}
+    Union & take all the strings in both $A$ and $B$ and lump them together into one language. \\ \hline
+    Concatenation & attach a string from $A$ in front of a string from $B$ in all possible ways to get strings in the new language. \\ \hline
+    Star & attach any number of strings in $A$ together to get a string in the new language.
+  \end{tabular}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples}
+  Try regular operations on these languages:
+  
+  \begin{example}
+    $L_1 = \{ \mbox{ alice, bob, carl } \} \;\;\;; \;\;\; L_2 = \{ 1,10 \} \;\;\;;\;\;\; L_3 = \{ \mbox{ ba, na } \}$
+  \end{example}
+  
+  \medskip
+  \begin{tabular}[t]{ll}
+    \begin{minipage}{1in}
+      \begin{itemize}
+      \item $L_1 \cup L_1 = ?$ 
+      \item $L_1 \cup L_2 = ?$ 
+      \item $L_2 \cup L_1 = ?$ 
+      \item $L_1 \circ L_2 = ?$ 
+      \item $L_2 \circ L_1 = ?$ 
+      \item $L_1 \circ L_1 = ?$ 
+      \end{itemize}
+    \end{minipage} &
+    \begin{minipage}{3in}
+      \begin{itemize}
+      \item $L_1 \circ \{\varepsilon\} = ?$
+      \item $L_1 \circ \emptyset = ?$
+      \item $L_2^* = ?$ 
+      \item $L_3^* = ?$ 
+      \item Does $L_2^*$ contain $101?, \;10101?,\; 1001?$
+      \item Does $L_3^*$ contain banana?
+      \end{itemize}
+    \end{minipage}
+  \end{tabular}
+\end{frame}
+
+\subsection[closure]{Closure}
+
+\begin{frame}
+  \frametitle{Introducing closure}
+
+  Consider the example languages we have seen:
+  \begin{example}
+    $L_1 = \{ \mbox{ alice, bob, carl } \} \;\;\;; \;\;\; L_2 = \{ 1,10 \} \;\;\;;\;\;\; L_3 = \{ \mbox{ ba, na } \}$
+  \end{example}
+
+  \begin{itemize}
+    \item They are all regular languages. (Can you write DFAs for them?)
+    \item Is $L_1 \circ L_2$ regular? What about $L_1 \cup L_2$? What about $L_3^*$?
+  \end{itemize}
+  \bigskip
+
+  It turns out that, if you take any regular languages and apply a
+  regular operation on them, you always get back a regular language.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Closure}
+
+  \begin{Definition}
+    A set is \alert{closed under an operation} $op$ if applying $op$
+      to members of the set returns an object still in the set.
+  \end{Definition}
+
+  \bigskip
+  
+  \begin{Theorem}
+    The class of regular languages is closed under the union,
+      concatenation, and star operations.
+  \end{Theorem}
+
+  \bigskip
+  If $A,B$ are regular languages, this means that $A\cup B$, $A \circ
+  B$, and $A^*$ are all regular languages.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Proof?}
+
+  \begin{Theorem}
+    The class of regular languages is closed under union.
+  \end{Theorem}  
+
+  \bigskip
+  How to prove this theorem?
+\end{frame}
+
+\section[Nondeterministic Finite Automata]{Nondeterministic Finite Automata}
+
+\subsection[example]{Example}
+
+\begin{frame}
+  \begin{block}{}
+    \[ L = \{ w \; \mid \; w \mbox{ has a 1 in the 2nd position from the
+    right end } \} \]
+  \end{block}
+
+  We can write a DFA for this, but it is a bit of a pain. It is hard
+  because we cannot rewind the input.
+
+  \bigskip
+  We can use nondeterminism to help us.
+
+  \bigskip
+
+  Suppose we can \alert{guess} where the 2nd position from the right
+  end is. All we have to do once we make a guess is to \alert{verify}
+  if our guess is correct.
+
+\end{frame}
+
+\begin{frame}
+  \begin{block}{}
+  \[ L = \{ w \; \mid \; w \mbox{ has a 1 in the 2nd position from the
+    right end } \} \]
+  \end{block}
+
+  \[\UseTips
+  \xymatrix {
+      *+\txt{\ } \ar[r] & *++[o][F]{q_0} \ar@(ul,ur)^{0,1}
+  \ar[r]^{1} & *++[o][F]{q_1} \ar[r]^{0,1} & *++[o][F=]{q_2}
+  }
+  \]  
+
+  Try it on 01011: None of these accept, but it's our fault for making
+  wrong guesses.
+
+  \begin{itemize}
+    \item $q_0 \stackrel{0}{\to} q_0 \stackrel{1}{\to} q_0 \stackrel{0}{\to} q_0 \stackrel{1}{\to} q_0 \stackrel{1}{\to} q_0$
+    \item $q_0 \stackrel{0}{\to} q_0 \stackrel{1}{\to} q_1 \stackrel{0}{\to} q_2$
+    \item $q_0 \stackrel{0}{\to} q_0 \stackrel{1}{\to} q_0 \stackrel{0}{\to} q_0 \stackrel{1}{\to} q_0 \stackrel{1}{\to} q_1$
+  \end{itemize}
+
+  \bigskip
+  But there's a way to get the machine to accept!
+ \[ q_0 \stackrel{0}{\to} q_0 \stackrel{1}{\to} q_0 \stackrel{0}{\to}
+ q_0 \stackrel{1}{\to} q_1 \stackrel{1}{\to} q_2 \]
+
+\end{frame}
+
+\begin{frame}
+  \begin{block}{}
+  \[ L = \{ w \; \mid \; w \mbox{ has a 1 in the 2nd position from the
+    right end } \} \]
+  \end{block}
+
+  \[\UseTips
+  \xymatrix {
+      *+\txt{\ } \ar[r] & *++[o][F]{q_0} \ar@(ul,ur)^{0,1}
+  \ar[r]^{1} & *++[o][F]{q_1} \ar[r]^{0,1} & *++[o][F=]{q_2}
+  }
+  \]  
+
+  \bigskip
+  Try it on 1001: no way to get the machine to accept.
+
+  e.g. $q_0 \stackrel{1}{\to} q_0 \stackrel{0}{\to} q_0
+  \stackrel{0}{\to} q_0 \stackrel{1}{\to} q_1 $
+
+  \bigskip
+  Note that we can represent all the possible ways to process a string
+  with the machine using a \alert{\textbf{tree}}.
+
+  \bigskip
+  The \alert{nodes} at each level in the tree can be thought of as
+  your \alert{fingers} keeping track of all the possible states you
+  can be at after having processed the input symbols upto that level.
+\end{frame}
+
+
+\subsection[definition]{Definition}
+
+\begin{frame}
+
+  \bigskip
+  \begin{Definition}
+    We say that \alert{an NFA $M$ accept an input string} $w$ if there
+    is {\em some path\/} which can be followed on input $w$ and leads
+    to an accept state.
+
+    \medskip
+    It \alert{rejects} $w$ if {\em all\/} paths that can be followed
+	on input $w$ lead to rejection.
+  \end{Definition}
+
+
+  \bigskip
+  \begin{Definition}
+    We say that
+      \alert{$M$ accepts a language $L$} if
+      
+      \begin{itemize}
+	\item for every input $w\in L$ we have $M(w)$ accepts, and
+      
+	\item for every input $w\not\in L$, we have $M(w)$ rejects. 
+      \end{itemize}
+
+      We write, $L(M)$ for the language $L$ accepted by $M$.
+      \end{Definition}
+
+  
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Another example}
+
+  \begin{block}{}
+  \[ L = \{  w \; \mid \; w \mbox{ contains 11 as a substring } \}\]
+  \end{block}
+
+  \[\UseTips
+  \xymatrix {
+      *+\txt{\ } \ar[r] & *++[o][F]{q_0} \ar@(ul,ur)^{0,1}
+  \ar[r]^{1} & *++[o][F]{q_1} \ar[r]^{1} & *++[o][F=]{q_2}\ar@(ul,ur)^{0,1}
+  }
+  \]  
+
+  \bigskip
+  We can describe this formally also.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Formal definition of a nondeterministic finite automaton}
+
+  \begin{Definition}
+    A \alert{nondeterministic finite automaton} is a 5-tuple $(Q,\Sigma,
+      \delta, q_0, F)$ where
+      \begin{enumerate}
+	\item $Q$ is a finite set called the \alert{states},
+	\item $\Sigma$ is a finite set called the \alert{alphabet},
+	\item $\delta: Q\times \Sigma_\varepsilon \rightarrow \mathcal{P}(Q)$ is the
+	\alert{transition function},
+	\item $q_0 \in Q$ is the \alert{start state},
+	\item $F \subseteq Q$ is the \alert{set of accept states}.
+      \end{enumerate}
+      \end{Definition}
+
+\end{frame}
+
+\begin{frame}
+  
+  \[\UseTips
+  \xymatrix {
+      *+\txt{\ } \ar[r] & *++[o][F]{q_1} \ar@(ul,ur)^{0,1}
+  \ar[r]^{0} & *++[o][F]{q_2} \ar[r]^{0,\varepsilon} & *++[o][F]{q_3}
+  \ar[r]^{1} & *++[o][F=]{q_4} \ar@(ul,ur)^{0,1}
+  }
+  \]
+
+  The formal description of this machine is $(Q,\Sigma,\delta,q_1,F)$
+  where
+  \begin{enumerate}
+    \item $Q = $ \only<1->{\alert{$\{q_1,q_2,q_3,q_4 \}$}}
+    \item $\Sigma = $\only<2->{\alert{$\{0,1\}$}}
+    \item $\delta$ is this function:
+
+      \only<3->{\alert{
+	\begin{scriptsize}
+	\begin{tabular}{l|lll} 
+	  & 0 & 1 & $\varepsilon$ \\\hline
+	  $q_1$ & $\{q_1,q_2\}$ & $\{q_1\}$ & $\emptyset$ \\
+	  $q_2$ & $\{q_3\}$ & $\emptyset$ & $\{q_3\}$ \\
+	  $q_3$ & $\emptyset$ & $\{q_4\}$ & $\emptyset$ \\
+	  $q_4$ & $\{ q_4\}$ & $\{q_4\}$ & $\emptyset$ \\
+	\end{tabular}
+	\end{scriptsize}}}
+    \item The start state is \only<4->{\alert{$q_1$}}
+    \item $F = $ \only<5->{\alert{$\{q_4\}$}}
+  \end{enumerate}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Formal definition of computation for NFA}
+  
+  Let $n\in \Z^+$, $M = (Q, \Sigma, \delta, q_0, F)$ be a finite
+  automaton, and $w = w_1 w_2 \ldots w_n$ be a string over the
+  alphabet $\Sigma$.
+
+  \begin{Definition}
+  \alert{$M$ accepts $w$} if a sequence of states $r_0, r_1, \ldots,
+  r_n$ exists in $Q$ with the following three conditions:
+
+  \begin{enumerate}
+    \item[1.] [$M$ starts in the start state.] $r_0 = q_0$,
+    \item[2.] [$r_{i+1}$ is one of the allowable next states from
+    $r_i$ with input $w_{i+1}$.] \ \ \ \alert{$r_{i+1} \in \delta(r_i, w_{i+1})$}
+    for $i = 0,\ldots, n-1$,
+    \item[3.] [$M$ ends up in an accept state.] $r_n \in F$.
+  \end{enumerate}
+  \end{Definition}
+
+\end{frame}
+
+
+\subsection[NFA $\approx$ DFA]{Equivalence of NFAs and DFAs}
+
+\begin{frame}
+  \frametitle{Equivalence of NFAs and DFAs}
+
+  \begin{Theorem}
+    Every nondeterministic
+      finite automaton has an equivalent deterministic finite automaton.
+  \end{Theorem}
+
+  \bigskip
+  The proof of this theorem is called the \alert{subset construction}.
+
+  Key observation: keep track of states with fingers on them.
+
+  \begin{Corollary}
+    A language is regular if
+    and only if some nondeterministic finite automaton recognizes
+    it.
+  \end{Corollary}
+\end{frame}
+
+\subsection[closure]{Closure}
+
+\begin{frame}
+  \frametitle{Remember closure?}
+
+  \begin{Theorem}
+    The class of regular
+    languages is closed under the union, concatenation, and star
+    operations.
+  \end{Theorem}
+
+
+  \bigskip
+  We can prove closure of regular languages under union,
+  concatenation, and star very easily using \alert{NFAs}.
+   
+\end{frame}
+
+\begin{frame}
+  \frametitle{Closure of class of regular languages under union}
+
+  \begin{Theorem}
+    The class of regular languages is closed under the union
+    operation.
+  \end{Theorem}
+
+  \begin{tiny}
+  \begin{Proof}
+    Let $L_1$ be a regular language recognized by an NFA $N_1 = (Q_1,\Sigma, \delta_1, q_1, F_1)$, and
+
+    Let $L_2$ be a regular language recognized by an NFA $N_2 = (Q_2,\Sigma, \delta_2, q_2, F_2)$.
+
+    Construct $N= (Q,\Sigma, \delta, q_0,F)$ for $L_1 \cup L_2$ as follows:
+    \begin{enumerate}
+      \item $Q = \{q_0\} \cup Q_1 \cup Q_2$ 
+      \item $q_0$ is the start state of $N$.
+      \item $F = F_1 \cup F_2$ 
+      \item For any $q \in Q$ and $a \in \Sigma\cup \{\varepsilon\}$,
+        \[ \delta(q,a) = 
+        \begin{cases} 
+          \delta_1(q,a) & \text{ if } q \in Q_1 \\
+          \delta_2(q,a) & \text{ if } q \in Q_2 \\
+          \{ q_1, q_2 \} & \text{ if } q =q_0 \text{ and } a = \varepsilon \\
+          \emptyset & \text{ if } q =q_0 \text{ and } a \neq \varepsilon 
+        \end{cases} 
+        \]
+    \end{enumerate}
+
+  \end{Proof}
+  \end{tiny}%
+\end{frame}
+
+\end{document}
